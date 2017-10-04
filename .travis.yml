@@ -1,0 +1,15 @@
+language: java
+
+notifications:
+  email: false
+
+install:
+  - ./gradlew dependencies
+
+script:
+  - ./gradlew shadowJar
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/

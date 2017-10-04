@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Glacier.iml" filepath="$PROJECT_DIR$/.idea/modules/Glacier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Glacier_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Glacier_main.iml" group="Glacier" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Glacier_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Glacier_test.iml" group="Glacier" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects-Glacier.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects-Glacier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects-Glacier_main.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects-Glacier_main.iml" group="Glacier" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects-Glacier_test.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects-Glacier_test.iml" group="Glacier" />
+    </modules>
+  </component>
+</project>
