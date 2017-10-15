@@ -15,6 +15,7 @@ import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.pippo.core.Application;
+import ro.pippo.core.Pippo;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +36,9 @@ public class Glacier extends Application {
 
     @Getter @Setter(onParam = @__(@NonNull))
     private JsonConfiguration config;
+
+    @Getter @Setter(onParam = @__(@NonNull))
+    private Pippo pippo;
 
     @Getter @Setter
     private boolean running = false;
@@ -76,7 +80,7 @@ public class Glacier extends Application {
             getInstance().setConfig(new FileBasedConfigurationBuilder<>(JsonConfiguration.class)
                     .configure(new Parameters().properties()
                             .setFileName(confPath)
-                            .setThrowExceptionOnMissing(true)
+                            .setThrowExceptionOnMissing(false)
                             .setListDelimiterHandler(new DefaultListDelimiterHandler(';'))
                             .setReloadingDetectorFactory(new DefaultReloadingDetectorFactory())
                             .setEncoding("UTF-8"))
@@ -87,7 +91,54 @@ public class Glacier extends Application {
             System.exit(-1);
         }
 
+        String address = getInstance().getCmdArgs().getOptionValue("address");
+        if(address == null) {
+            address = getInstance().getConfig().getString("server.address");
 
+            if(address == null) {
+                getInstance().getLogger().error("Could not find config key \"address\". Please check for missing keys.");
+                System.exit(-1);
+            }
+        }
+
+        int port = -1;
+        try {
+            String input = getInstance().getCmdArgs().getOptionValue("port");
+            if(input != null) {
+                port = Integer.parseInt(input);
+            }
+        } catch (NumberFormatException ex) {
+            getInstance().getLogger().warn("Could not parse provided port to valid integer. Using config value...");
+        }
+
+        if(port == -1) {
+            port = getInstance().getConfig().getInt("server.port");
+        }
+
+        String mode = getInstance().getCmdArgs().getOptionValue("mode");
+        if(mode == null) {
+            mode = getInstance().getConfig().getString("server.mode");
+        }
+        mode = mode.toLowerCase();
+
+        switch(mode) {
+            case "dev":
+            case "test":
+                break;
+            default:
+                mode = "prod";
+                break;
+        }
+
+        System.setProperty("pippo.mode", mode);
+        System.setProperty("pippo.reload.enabled", String.valueOf(
+                mode.equalsIgnoreCase("dev") || getInstance().getConfig().getBoolean("server.reload")
+        ));
+
+        getInstance().setPippo(new Pippo(getInstance()));
+        getInstance().getPippo().getServer().getSettings().host(address);
+        getInstance().getPippo().getServer().getSettings().port(port);
+        getInstance().getPippo().start();
     }
 
     @Override
