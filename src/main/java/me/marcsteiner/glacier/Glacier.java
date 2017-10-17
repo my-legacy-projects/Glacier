@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.marcsteiner.glacier.bootstrap.BootstrapOptions;
+import me.marcsteiner.glacier.database.Database;
+import me.marcsteiner.glacier.database.impl.MySQLDatabase;
 import org.apache.commons.cli.*;
 import org.apache.commons.configuration2.builder.DefaultReloadingDetectorFactory;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
@@ -21,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 
 @MetaInfServices
 public class Glacier extends Application {
@@ -39,6 +42,9 @@ public class Glacier extends Application {
 
     @Getter @Setter(onParam = @__(@NonNull))
     private Pippo pippo;
+
+    @Getter @Setter(onParam = @__(@NonNull))
+    private Database database;
 
     @Getter @Setter
     private boolean running = false;
@@ -135,6 +141,26 @@ public class Glacier extends Application {
                 mode.equalsIgnoreCase("dev") || getInstance().getConfig().getBoolean("server.reload")
         ));
 
+        String dbAddress = getInstance().getConfig().getString("database.address");
+        int dbPort = getInstance().getConfig().getInt("database.port");
+        String dbDatabase = getInstance().getConfig().getString("database.database");
+        String dbUsername = getInstance().getConfig().getString("database.username");
+        String dbPassword = getInstance().getConfig().getString("database.password");
+
+        if(dbAddress == null || dbDatabase == null || dbUsername == null || dbPassword == null) {
+            getInstance().getLogger().error("Could not find database keys in config.json. Check for missing keys.");
+            System.exit(-1);
+        }
+
+        try {
+            getInstance().setDatabase(new MySQLDatabase(dbAddress, dbPort, dbDatabase, dbUsername, dbPassword));
+            getInstance().getDatabase().connect();
+            getInstance().getDatabase().setup();
+        } catch (SQLException ex) {
+            getInstance().getLogger().error("Could not connect to the MySQL database!", ex);
+            System.exit(-1);
+        }
+
         getInstance().setPippo(new Pippo(getInstance()));
         getInstance().getPippo().getServer().getSettings().host(address);
         getInstance().getPippo().getServer().getSettings().port(port);
@@ -148,6 +174,10 @@ public class Glacier extends Application {
 
     @Override
     protected void onDestroy() {
+        if(getInstance().getDatabase() != null) {
+            getInstance().getDatabase().disconnect();
+        }
+
         // Called when Jetty is destroyed
     }
 

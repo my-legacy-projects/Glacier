@@ -4,5 +4,17 @@
       "port": 8080,
       "mode": "dev",
       "reload": false
+   },
+   "database": {
+      "address": "127.0.0.1",
+      "port": 3306,
+      "database": "glacier",
+      "username": "root",
+      "password": "passw0rd",
+      "pool": {
+         "min": 5,
+         "max": 25,
+         "timeout": 3000
+      }
    }
 }
