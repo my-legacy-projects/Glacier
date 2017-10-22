@@ -66,10 +66,10 @@ public class MySQLDatabase implements Database {
 
     @Override
     public void update(String query) {
-        @Cleanup Connection connection = getConnection();
-        @Cleanup PreparedStatement statement;
-
         try {
+            @Cleanup Connection connection = getConnection();
+            @Cleanup PreparedStatement statement = null;
+
             statement = connection.prepareStatement(encode(query));
             statement.executeUpdate();
         } catch (SQLException ex) {
@@ -79,18 +79,20 @@ public class MySQLDatabase implements Database {
 
     @Override
     public ResultSet query(String query) {
-        @Cleanup Connection connection = getConnection();
-        @Cleanup PreparedStatement statement;
-        @Cleanup ResultSet resultSet = null;
-
         try {
+            @Cleanup Connection connection = getConnection();
+            @Cleanup PreparedStatement statement = null;
+            @Cleanup ResultSet resultSet = null;
+
             statement = connection.prepareStatement(encode(query));
             resultSet = statement.executeQuery();
+
+            return resultSet;
         } catch (SQLException ex) {
             Glacier.getInstance().getLogger().error("Error while executing SQL Query!", ex);
         }
 
-        return resultSet;
+        return null;
     }
 
     @Override
