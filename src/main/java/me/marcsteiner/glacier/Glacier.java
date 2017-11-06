@@ -1,10 +1,12 @@
 package me.marcsteiner.glacier;
 
+import com.google.common.eventbus.EventBus;
 import com.virtlink.commons.configuration2.jackson.JsonConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.marcsteiner.glacier.bootstrap.BootstrapOptions;
+import me.marcsteiner.glacier.commands.CommandManager;
 import me.marcsteiner.glacier.database.Database;
 import me.marcsteiner.glacier.database.impl.MySQLDatabase;
 import org.apache.commons.cli.*;
@@ -24,6 +26,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 @MetaInfServices
 public class Glacier extends Application {
@@ -45,6 +51,15 @@ public class Glacier extends Application {
 
     @Getter @Setter(onParam = @__(@NonNull))
     private Database database;
+
+    @Getter @Setter(onParam = @__(@NonNull))
+    private CommandManager commandManager;
+
+    @Getter(lazy = true)
+    private final EventBus eventBus = new EventBus();
+
+    @Getter @Setter(onParam = @__(@NonNull))
+    private Scanner consoleScanner;
 
     @Getter @Setter
     private boolean running = false;
@@ -102,7 +117,7 @@ public class Glacier extends Application {
             address = getInstance().getConfig().getString("server.address");
 
             if(address == null) {
-                getInstance().getLogger().error("Could not find config key \"address\". Please check for missing keys.");
+                getInstance().getLogger().error("Could not find config key `address\'. Please check for missing keys.");
                 System.exit(-1);
             }
         }
@@ -161,10 +176,46 @@ public class Glacier extends Application {
             System.exit(-1);
         }
 
+        getInstance().setCommandManager(new CommandManager());
+        getInstance().getCommandManager().scan();
+
         getInstance().setPippo(new Pippo(getInstance()));
         getInstance().getPippo().getServer().getSettings().host(address);
         getInstance().getPippo().getServer().getSettings().port(port);
         getInstance().getPippo().start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(Glacier::shutdown));
+
+        getInstance().getLogger().info("Hello and welcome to Glacier. Listening on https://{}:{}/", address, port);
+        getInstance().getLogger().info("Type `help\' for a list of commands.");
+        System.out.print("\n> ");
+
+        getInstance().setConsoleScanner(new Scanner(System.in));
+
+        // Continuously wait for input on another thread
+        // This doesn't interfere with Pippo as this and Pippo are both running on another thread
+        // The ConsoleInputEvent listeners on the other hand are running on the main thread
+        Thread inputThread = new Thread(() -> {
+            while(getInstance().isRunning()) {
+                String input = getInstance().getConsoleScanner().nextLine();
+                String[] instruction = input.split(" ");
+
+                String cmdLabel = instruction[0];
+                String[] cmdArgs = new String[0];
+
+                if(instruction.length >= 2) {
+                    List<String> tempArgs = new ArrayList<>();
+                    tempArgs.addAll(Arrays.asList(instruction));
+                    tempArgs.remove(0);
+                    cmdArgs = tempArgs.toArray(new String[tempArgs.size()]);
+                }
+
+                getInstance().getCommandManager().execute(cmdLabel, cmdArgs);
+            }
+        });
+        inputThread.setName("Input Thread");
+        inputThread.setPriority(Thread.MIN_PRIORITY);
+        inputThread.run();
     }
 
     @Override
@@ -172,11 +223,17 @@ public class Glacier extends Application {
         // Called when Jetty is initialized
     }
 
+    private static void shutdown() {
+
+    }
+
     @Override
     protected void onDestroy() {
         if(getInstance().getDatabase() != null) {
             getInstance().getDatabase().disconnect();
         }
+
+        System.exit(0);
 
         // Called when Jetty is destroyed
     }
