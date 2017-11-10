@@ -9,6 +9,7 @@ import me.marcsteiner.glacier.bootstrap.BootstrapOptions;
 import me.marcsteiner.glacier.commands.CommandManager;
 import me.marcsteiner.glacier.database.Database;
 import me.marcsteiner.glacier.database.impl.MySQLDatabase;
+import me.marcsteiner.glacier.utils.ApplicationUtil;
 import org.apache.commons.cli.*;
 import org.apache.commons.configuration2.builder.DefaultReloadingDetectorFactory;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
@@ -26,10 +27,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -114,6 +112,27 @@ public class Glacier extends Application {
             System.exit(-1);
         }
 
+        try {
+            if (getInstance().getConfig().getInt("version") < 1) {
+                if (confFile.delete()) {
+                    try {
+                        Files.copy(Glacier.class.getResourceAsStream("/config.json"), confFile.toPath());
+                    } catch (IOException ex) {
+                        getInstance().getLogger().error("Could not create new config.json file.", ex);
+                        System.exit(-1);
+                    }
+
+                    getInstance().getLogger().warn("Found outdated config. Overwriting...");
+                    ApplicationUtil.restart();
+                }
+            }
+        } catch (NoSuchElementException ex) {
+            if(confFile.delete()) {
+                getInstance().getLogger().warn("Found outdated config. Overwriting...");
+                ApplicationUtil.restart();
+            }
+        }
+
         String address = getInstance().getCmdArgs().getOptionValue("address");
         if(address == null) {
             address = getInstance().getConfig().getString("server.address");
@@ -169,14 +188,14 @@ public class Glacier extends Application {
             System.exit(-1);
         }
 
-        /*try {
+        try {
             getInstance().setDatabase(new MySQLDatabase(dbAddress, dbPort, dbDatabase, dbUsername, dbPassword));
             getInstance().getDatabase().connect();
             getInstance().getDatabase().setup();
         } catch (SQLException ex) {
             getInstance().getLogger().error("Could not connect to the MySQL database!", ex);
             System.exit(-1);
-        }*/
+        }
 
         getInstance().setCommandManager(new CommandManager());
         getInstance().getCommandManager().scan();
