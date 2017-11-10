@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @MetaInfServices
 public class Glacier extends Application {
@@ -167,17 +169,20 @@ public class Glacier extends Application {
             System.exit(-1);
         }
 
-        try {
+        /*try {
             getInstance().setDatabase(new MySQLDatabase(dbAddress, dbPort, dbDatabase, dbUsername, dbPassword));
             getInstance().getDatabase().connect();
             getInstance().getDatabase().setup();
         } catch (SQLException ex) {
             getInstance().getLogger().error("Could not connect to the MySQL database!", ex);
             System.exit(-1);
-        }
+        }*/
 
         getInstance().setCommandManager(new CommandManager());
         getInstance().getCommandManager().scan();
+        getInstance().getCommandManager().setThreadPoolService(
+                (ThreadPoolExecutor) Executors.newFixedThreadPool(getInstance().getConfig().getInt("database.pool.max"))
+        );
 
         getInstance().setPippo(new Pippo(getInstance()));
         getInstance().getPippo().getServer().getSettings().host(address);
