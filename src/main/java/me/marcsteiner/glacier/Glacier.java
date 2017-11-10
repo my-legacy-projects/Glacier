@@ -31,11 +31,13 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-@MetaInfServices
-public class Glacier extends Application {
+public class Glacier {
 
     @Getter(lazy = true)
     private static final Glacier instance = new Glacier();
+
+    @Getter(lazy = true)
+    private static final GlacierWeb webHandle = new GlacierWeb();
 
     @Getter(lazy = true)
     private final Logger logger = LoggerFactory.getLogger(Glacier.class);
@@ -203,7 +205,7 @@ public class Glacier extends Application {
                 (ThreadPoolExecutor) Executors.newFixedThreadPool(getInstance().getConfig().getInt("database.pool.max"))
         );
 
-        getInstance().setPippo(new Pippo(getInstance()));
+        getInstance().setPippo(new Pippo(getWebHandle()));
         getInstance().getPippo().getServer().getSettings().host(address);
         getInstance().getPippo().getServer().getSettings().port(port);
         getInstance().getPippo().start();
@@ -242,24 +244,9 @@ public class Glacier extends Application {
         inputThread.run();
     }
 
-    @Override
-    protected void onInit() {
-        // Called when Jetty is initialized
-    }
-
+    // Shutdown hook
     private static void shutdown() {
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        if(getInstance().getDatabase() != null) {
-            getInstance().getDatabase().disconnect();
-        }
-
-        System.exit(0);
-
-        // Called when Jetty is destroyed
     }
 
 }
