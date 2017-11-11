@@ -1,7 +1,9 @@
 package me.marcsteiner.glacier;
 
 import com.google.common.eventbus.EventBus;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import com.virtlink.commons.configuration2.jackson.JsonConfiguration;
+import com.zaxxer.hikari.pool.HikariPool;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -9,6 +11,8 @@ import me.marcsteiner.glacier.bootstrap.BootstrapOptions;
 import me.marcsteiner.glacier.commands.CommandManager;
 import me.marcsteiner.glacier.database.Database;
 import me.marcsteiner.glacier.database.impl.MySQLDatabase;
+import me.marcsteiner.glacier.events.impl.bootstrap.GlacierDestroyEvent;
+import me.marcsteiner.glacier.events.impl.bootstrap.GlacierStartEvent;
 import me.marcsteiner.glacier.utils.ApplicationUtil;
 import org.apache.commons.cli.*;
 import org.apache.commons.configuration2.builder.DefaultReloadingDetectorFactory;
@@ -24,6 +28,7 @@ import ro.pippo.core.Pippo;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -194,7 +199,7 @@ public class Glacier {
             getInstance().setDatabase(new MySQLDatabase(dbAddress, dbPort, dbDatabase, dbUsername, dbPassword));
             getInstance().getDatabase().connect();
             getInstance().getDatabase().setup();
-        } catch (SQLException ex) {
+        } catch (SQLException | HikariPool.PoolInitializationException ex) {
             getInstance().getLogger().error("Could not connect to the MySQL database!", ex);
             System.exit(-1);
         }
@@ -204,6 +209,16 @@ public class Glacier {
         getInstance().getCommandManager().setThreadPoolService(
                 (ThreadPoolExecutor) Executors.newFixedThreadPool(getInstance().getConfig().getInt("database.pool.max"))
         );
+
+        // Register event subscribers
+
+
+        GlacierStartEvent gsEvent = new GlacierStartEvent(System.currentTimeMillis());
+        getInstance().getEventBus().post(gsEvent);
+        if(gsEvent.isCancelled()) {
+            getInstance().getLogger().warn("The Startup event of Glacier has been cancelled.");
+            System.exit(-1);
+        }
 
         getInstance().setPippo(new Pippo(getWebHandle()));
         getInstance().getPippo().getServer().getSettings().host(address);
@@ -246,7 +261,12 @@ public class Glacier {
 
     // Shutdown hook
     private static void shutdown() {
+        getInstance().getEventBus().post(new GlacierDestroyEvent(System.currentTimeMillis()));
 
+        if(!getInstance().getDatabase().isConnected()) {
+            getInstance().getLogger().info("Disconnecting from Database.");
+            getInstance().getDatabase().disconnect();
+        }
     }
 
 }

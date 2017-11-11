@@ -1,6 +1,7 @@
 package me.marcsteiner.glacier.database;
 
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.codecs.Codec;
 import org.owasp.esapi.codecs.MySQLCodec;
@@ -13,7 +14,7 @@ public interface Database {
 
     Codec SQL_CODEC = new MySQLCodec(MySQLCodec.Mode.STANDARD);
 
-    void connect();
+    void connect() throws HikariPool.PoolInitializationException;
     void disconnect();
     boolean isConnected();
 

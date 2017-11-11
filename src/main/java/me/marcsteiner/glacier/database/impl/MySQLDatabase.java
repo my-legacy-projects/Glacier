@@ -1,7 +1,9 @@
 package me.marcsteiner.glacier.database.impl;
 
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +30,10 @@ public class MySQLDatabase implements Database {
     private final String password;
 
     @Override
-    public void connect() {
+    public void connect() throws HikariPool.PoolInitializationException {
         if(!isConnected()) {
             HikariConfig config = new HikariConfig();
-            config.setDriverClassName("com.mysql.jdbc.Driver");
+            config.setDriverClassName("com.mysql.cj.jdbc.Driver");
             config.setJdbcUrl("jdbc:mysql://" + address + ":" + port + "/" + database);
             config.setUsername(username);
             config.setPassword(password);
