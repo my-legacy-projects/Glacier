@@ -17,5 +17,8 @@
          "timeout": 3000
       }
    },
+   "upload": {
+      "location": "uploads"
+   },
    "version": 1
 }

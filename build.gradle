@@ -48,12 +48,24 @@ dependencies {
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
     compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
-    compile group: 'ro.pippo', name: 'pippo', version: '1.5.0'
     compile group: 'com.google.guava', name: 'guava', version: '23.0'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.1'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
     compile group: 'org.owasp.esapi', name: 'esapi', version: '2.1.0.1'
+
+    // Web
+    compile group: 'ro.pippo', name: 'pippo', version: '1.5.0'
+    compile group: 'ro.pippo', name: 'pippo-freemarker', version: '1.5.0'
+    compile group: 'ro.pippo', name: 'pippo-gson', version: '1.5.0'
+    compile group: 'ro.pippo', name: 'pippo-session-cookie', version: '1.5.0'
+    compile group: 'ro.pippo', name: 'pippo-sasscompiler', version: '1.5.0'
+
+    // Webjars
+    compile group: 'org.webjars', name: 'bootstrap', version: '4.0.0-beta.2'
+    compile group: 'org.webjars', name: 'vue', version: '2.5.2'
+    compile group: 'org.webjars', name: 'jquery', version: '3.2.1'
+    compile group: 'org.webjars', name: 'font-awesome', version: '4.7.0'
 
     // Dependencies
     testCompile group: 'junit', name: 'junit', version: '4.12'

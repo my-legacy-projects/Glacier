@@ -20,6 +20,7 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.io.FileUtils;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -267,6 +268,8 @@ public class Glacier {
             getInstance().getLogger().info("Disconnecting from Database.");
             getInstance().getDatabase().disconnect();
         }
+
+        getInstance().setRunning(false);
     }
 
 }
