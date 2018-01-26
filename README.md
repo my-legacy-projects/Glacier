@@ -1,14 +1,19 @@
-<p align="center"><img width=15% src="https://openclipart.org/image/2400px/svg_to_png/201913/glacier.png"></p>
-<p align="center"><img width=17.5% src="https://i.imgur.com/FuCpGpU.png"></p>
+<div align="center">
+    <img width=15% src="https://openclipart.org/image/2400px/svg_to_png/201913/glacier.png">
+    <h1>Glacier</h1>
+</div>
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [![Travis CI](https://img.shields.io/travis/Marc3842h/Glacier.svg)][0]
 [![Dependencies](https://img.shields.io/librariesio/github/Marc3842h/Glacier.svg)][1]
-[![](https://img.shields.io/website-up-down-green-red/http/marcsteiner.me.svg?label=MarcSteiner.me)][2]
-[![License](https://img.shields.io/github/license/Marc3842h/Glacier.svg)][3]
+[![Up or down?](https://img.shields.io/website-up-down-green-red/http/marcsteiner.me.svg?label=MarcSteiner.me)][2]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -17,13 +22,14 @@
 Glacier `/ˈgleɪʃər/` is a lightweight [Pippo](http://www.pippo.ro/)-based web
 backend and blog script currently running on [MarcSteiner.me][2]. It 
 implements both a simple website as well as a blog scripting software with 
-support for modern techniques like Markdown or SASS. Glacier itself is highly 
+support for modern techniques. Glacier itself is highly
 customizable and is running on modern web techniques like [Jetty](https://www.eclipse.org/jetty/).
 
 ## Features
 
 * Both simple website as well as blog scripting software
 * Support for advanced technologies like Markdown or SASS
+* Frontend with Ajax communication style with the backend
 * Developed with simplicity and security in mind
 * Licensed under the MIT License and fully open-source
 * Highly customizable 
