@@ -20,10 +20,8 @@ public class ShutdownCommand implements CommandExecutor {
         if(args.length >= 1) {
             if(args[0].equalsIgnoreCase("-r")) {
                 logger.info("Thank you and have a nice day. See you soon.");
-                ApplicationUtil.restart();
-                Glacier.getInstance().getPippo().stop();
 
-                System.exit(0);
+                ApplicationUtil.restart();
                 return true;
             }
         } else {

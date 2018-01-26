@@ -17,11 +17,16 @@ public class ApplicationUtil {
             String java = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
             File jar = new File(Glacier.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
-            if (!jar.getName().endsWith(".jar"))
+            if (!jar.getName().endsWith(".jar")) {
                 return;
+            }
+
+            Glacier.getInstance().getPippo().stop();
 
             ProcessBuilder builder = new ProcessBuilder(Arrays.asList(java, "-jar", jar.getPath()));
             builder.start();
+
+            System.exit(0);
         } catch (IOException | URISyntaxException ex) {
             Glacier.getInstance().getLogger().error("Could not restart Glacier.", ex);
             System.exit(-1);
