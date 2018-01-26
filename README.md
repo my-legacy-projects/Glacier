@@ -12,12 +12,6 @@
 [![Travis CI](https://img.shields.io/travis/Marc3842h/Glacier.svg)][0]
 [![Dependencies](https://img.shields.io/librariesio/github/Marc3842h/Glacier.svg)][1]
 [![Up or down?](https://img.shields.io/website-up-down-green-red/http/marcsteiner.me.svg?label=MarcSteiner.me)][2]
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 Glacier `/ˈgleɪʃər/` is a lightweight [Pippo](http://www.pippo.ro/)-based web
 backend and blog script currently running on [MarcSteiner.me][2]. It 
