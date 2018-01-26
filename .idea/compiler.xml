@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
-    </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Glacier_main" target="1.8" />
       <module name="Glacier_test" target="1.8" />
-      <module name="Gravity_main" target="1.8" />
-      <module name="Gravity_test" target="1.8" />
-      <module name="IdeaProjects-Glacier_main" target="1.8" />
-      <module name="IdeaProjects-Glacier_main~1" target="1.8" />
-      <module name="IdeaProjects-Glacier_test" target="1.8" />
-      <module name="IdeaProjects-Glacier_test~1" target="1.8" />
-      <module name="IdeaProjects-Gravity_main" target="1.8" />
-      <module name="IdeaProjects-Gravity_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

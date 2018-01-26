@@ -1,6 +1,7 @@
 package me.marcsteiner.glacier;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import com.virtlink.commons.configuration2.jackson.JsonConfiguration;
 import com.zaxxer.hikari.pool.HikariPool;
@@ -11,6 +12,7 @@ import me.marcsteiner.glacier.bootstrap.BootstrapOptions;
 import me.marcsteiner.glacier.commands.CommandManager;
 import me.marcsteiner.glacier.database.Database;
 import me.marcsteiner.glacier.database.impl.MySQLDatabase;
+import me.marcsteiner.glacier.events.Listener;
 import me.marcsteiner.glacier.events.impl.bootstrap.GlacierDestroyEvent;
 import me.marcsteiner.glacier.events.impl.bootstrap.GlacierStartEvent;
 import me.marcsteiner.glacier.utils.ApplicationUtil;
@@ -22,6 +24,8 @@ import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.kohsuke.MetaInfServices;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.pippo.core.Application;
@@ -29,6 +33,7 @@ import ro.pippo.core.Pippo;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -88,15 +93,15 @@ public class Glacier {
         }
 
         String confPath = getInstance().getCmdArgs().getOptionValue("config");
-        if(confPath == null) {
+        if (confPath == null) {
             confPath = "config.json";
         }
-        if(!confPath.endsWith(".json")) {
+        if (!confPath.endsWith(".json")) {
             confPath += ".json";
         }
 
         File confFile = new File(Paths.get(".").toAbsolutePath().normalize().toFile(), confPath);
-        if(!confFile.exists()) {
+        if (!confFile.exists()) {
             try {
                 Files.copy(Glacier.class.getResourceAsStream("/config.json"), confFile.toPath());
             } catch (IOException ex) {
@@ -135,17 +140,17 @@ public class Glacier {
                 }
             }
         } catch (NoSuchElementException ex) {
-            if(confFile.delete()) {
+            if (confFile.delete()) {
                 getInstance().getLogger().warn("Found outdated config. Overwriting...");
                 ApplicationUtil.restart();
             }
         }
 
         String address = getInstance().getCmdArgs().getOptionValue("address");
-        if(address == null) {
+        if (address == null) {
             address = getInstance().getConfig().getString("server.address");
 
-            if(address == null) {
+            if (address == null) {
                 getInstance().getLogger().error("Could not find config key `address\'. Please check for missing keys.");
                 System.exit(-1);
             }
@@ -154,24 +159,24 @@ public class Glacier {
         int port = -1;
         try {
             String input = getInstance().getCmdArgs().getOptionValue("port");
-            if(input != null) {
+            if (input != null) {
                 port = Integer.parseInt(input);
             }
         } catch (NumberFormatException ex) {
             getInstance().getLogger().warn("Could not parse provided port to valid integer. Using config value...");
         }
 
-        if(port == -1) {
+        if (port == -1) {
             port = getInstance().getConfig().getInt("server.port");
         }
 
         String mode = getInstance().getCmdArgs().getOptionValue("mode");
-        if(mode == null) {
+        if (mode == null) {
             mode = getInstance().getConfig().getString("server.mode");
         }
         mode = mode.toLowerCase();
 
-        switch(mode) {
+        switch (mode) {
             case "dev":
             case "test":
                 break;
@@ -191,7 +196,7 @@ public class Glacier {
         String dbUsername = getInstance().getConfig().getString("database.username");
         String dbPassword = getInstance().getConfig().getString("database.password");
 
-        if(dbAddress == null || dbDatabase == null || dbUsername == null || dbPassword == null) {
+        if (dbAddress == null || dbDatabase == null || dbUsername == null || dbPassword == null) {
             getInstance().getLogger().error("Could not find database keys in config.json. Check for missing keys.");
             System.exit(-1);
         }
@@ -212,11 +217,20 @@ public class Glacier {
         );
 
         // Register event subscribers
+        Reflections reflections = new Reflections("me.marcsteiner.glacier.listeners");
+        Set<Class<? extends Listener>> classes = reflections.getSubTypesOf(Listener.class);
 
+        for (Class<? extends Listener> listener : classes) {
+            try {
+                getInstance().getEventBus().register(listener.newInstance());
+            } catch (InstantiationException | IllegalAccessException ex) {
+                Glacier.getInstance().getLogger().error("Could not initialize class.", ex);
+            }
+        }
 
         GlacierStartEvent gsEvent = new GlacierStartEvent(System.currentTimeMillis());
         getInstance().getEventBus().post(gsEvent);
-        if(gsEvent.isCancelled()) {
+        if (gsEvent.isCancelled()) {
             getInstance().getLogger().warn("The Startup event of Glacier has been cancelled.");
             System.exit(-1);
         }
@@ -238,16 +252,15 @@ public class Glacier {
         // This doesn't interfere with Pippo as this and Pippo are both running on another thread
         // The ConsoleInputEvent listeners on the other hand are running on the main thread
         Thread inputThread = new Thread(() -> {
-            while(getInstance().isRunning()) {
+            while (getInstance().isRunning()) {
                 String input = getInstance().getConsoleScanner().nextLine();
                 String[] instruction = input.split(" ");
 
                 String cmdLabel = instruction[0];
                 String[] cmdArgs = new String[0];
 
-                if(instruction.length >= 2) {
-                    List<String> tempArgs = new ArrayList<>();
-                    tempArgs.addAll(Arrays.asList(instruction));
+                if (instruction.length >= 2) {
+                    List<String> tempArgs = new ArrayList<>(Arrays.asList(instruction));
                     tempArgs.remove(0);
                     cmdArgs = tempArgs.toArray(new String[tempArgs.size()]);
                 }
@@ -264,7 +277,7 @@ public class Glacier {
     private static void shutdown() {
         getInstance().getEventBus().post(new GlacierDestroyEvent(System.currentTimeMillis()));
 
-        if(!getInstance().getDatabase().isConnected()) {
+        if (getInstance().getDatabase() != null && !getInstance().getDatabase().isConnected()) {
             getInstance().getLogger().info("Disconnecting from Database.");
             getInstance().getDatabase().disconnect();
         }
