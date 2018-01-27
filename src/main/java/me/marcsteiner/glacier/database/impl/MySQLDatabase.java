@@ -1,16 +1,20 @@
 package me.marcsteiner.glacier.database.impl;
 
-import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.HikariPoolMXBean;
 import com.zaxxer.hikari.pool.HikariPool;
 import lombok.Cleanup;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.marcsteiner.glacier.Glacier;
 import me.marcsteiner.glacier.database.Database;
 
+import javax.management.JMX;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +35,7 @@ public class MySQLDatabase implements Database {
 
     @Override
     public void connect() throws HikariPool.PoolInitializationException {
-        if(!isConnected()) {
+        if (!isConnected()) {
             HikariConfig config = new HikariConfig();
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
             config.setJdbcUrl("jdbc:mysql://" + address + ":" + port + "/" + database);
@@ -49,7 +53,7 @@ public class MySQLDatabase implements Database {
 
     @Override
     public void disconnect() {
-        if(isConnected()) {
+        if (isConnected()) {
             dataSource.close();
         } else {
             Glacier.getInstance().getLogger().warn("Database has already been disconnected.");
@@ -99,7 +103,7 @@ public class MySQLDatabase implements Database {
 
     @Override
     public Connection getConnection() {
-        if(isConnected()) {
+        if (isConnected()) {
             try {
                 return dataSource.getConnection();
             } catch (SQLException ex) {
@@ -114,7 +118,7 @@ public class MySQLDatabase implements Database {
 
     @Override
     public HikariDataSource getConnectionPool() {
-        if(isConnected()) {
+        if (isConnected()) {
             return dataSource;
         } else {
             Glacier.getInstance().getLogger().error("Connect first to the database before trying to get a connection pool.");
@@ -123,4 +127,19 @@ public class MySQLDatabase implements Database {
         return null;
     }
 
+    @Override
+    public int getAvailableConnections() {
+        try {
+            MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            ObjectName poolName;
+            poolName = new ObjectName("com.zaxxer.hikari:type=Pool (foo)");
+
+            HikariPoolMXBean poolProxy = JMX.newMXBeanProxy(mBeanServer, poolName, HikariPoolMXBean.class);
+
+            return poolProxy.getIdleConnections();
+        } catch (MalformedObjectNameException ex) {
+            Glacier.getInstance().getLogger().error("Could not get amount of available connections.", ex);
+            return -1;
+        }
+    }
 }

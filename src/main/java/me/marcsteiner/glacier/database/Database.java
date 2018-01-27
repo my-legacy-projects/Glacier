@@ -24,6 +24,7 @@ public interface Database {
 
     Connection getConnection();
     HikariDataSource getConnectionPool();
+    int getAvailableConnections();
 
     // Encodes a parameter to be safely passed with MySQL queries and updates (prevents SQL Injection)
     default String encode(String param) {

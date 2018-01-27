@@ -17,8 +17,8 @@ public class ShutdownCommand implements CommandExecutor {
 
     @Override
     public boolean execute(String label, String[] args) throws CommandExecuteException {
-        if(args.length >= 1) {
-            if(args[0].equalsIgnoreCase("-r")) {
+        if (args.length >= 1) {
+            if (args[0].equalsIgnoreCase("-r")) {
                 logger.info("Thank you and have a nice day. See you soon.");
 
                 ApplicationUtil.restart();

@@ -13,22 +13,22 @@ import java.util.Map;
 public class HelpCommand implements CommandExecutor {
 
     @Override
-    public boolean execute(String label, String[] args) throws CommandExecuteException {
-        if(args.length == 0) {
+    public boolean execute(String label, String[] args) {
+        if (args.length == 0) {
             logger.info("-- List of commands in Glacier --");
 
-            for(Map.Entry entry : Glacier.getInstance().getCommandManager().getCommands().entrySet()) {
+            for (Map.Entry entry : Glacier.getInstance().getCommandManager().getCommands().entrySet()) {
                 Command cmd = (Command) entry.getKey();
 
                 logger.info("{}: {}", cmd.value(), cmd.description());
             }
 
             return true;
-        } else if(args.length == 1) {
-            for(Map.Entry entry : Glacier.getInstance().getCommandManager().getCommands().entrySet()) {
+        } else if (args.length == 1) {
+            for (Map.Entry entry : Glacier.getInstance().getCommandManager().getCommands().entrySet()) {
                 Command cmd = (Command) entry.getKey();
 
-                if(cmd.value().equalsIgnoreCase(args[0]) || Arrays.asList(cmd.aliases()).contains(args[0])) {
+                if (cmd.value().equalsIgnoreCase(args[0]) || Arrays.asList(cmd.aliases()).contains(args[0])) {
                     logger.info("-- Information about `{}\' --", args[0]);
                     logger.info("Command: {}", cmd.value());
                     logger.info("Aliases: {}", Arrays.toString(cmd.aliases()));
