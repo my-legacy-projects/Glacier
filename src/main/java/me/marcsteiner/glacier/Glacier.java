@@ -8,6 +8,8 @@ import com.zaxxer.hikari.pool.HikariPool;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import me.marcsteiner.glacier.accounts.User;
+import me.marcsteiner.glacier.api.GlacierAPI;
 import me.marcsteiner.glacier.bootstrap.BootstrapOptions;
 import me.marcsteiner.glacier.commands.CommandManager;
 import me.marcsteiner.glacier.database.Database;
@@ -52,6 +54,9 @@ public class Glacier {
 
     @Getter(lazy = true)
     private final Logger logger = LoggerFactory.getLogger(Glacier.class);
+
+    @Getter//(lazy=true)
+    private GlacierAPI api;
 
     @Getter @Setter(onParam = @__(@NonNull))
     private CommandLine cmdArgs;

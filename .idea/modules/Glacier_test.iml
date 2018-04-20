@@ -21,6 +21,7 @@
     <orderEntry type="library" name="Gradle: com.zaxxer:HikariCP:2.7.1" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-simple:1.7.25" level="project" />
     <orderEntry type="library" name="Gradle: org.owasp.esapi:esapi:2.1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.mindrot:jbcrypt:0.4" level="project" />
     <orderEntry type="library" name="Gradle: ro.pippo:pippo-freemarker:1.5.0" level="project" />
     <orderEntry type="library" name="Gradle: ro.pippo:pippo-gson:1.5.0" level="project" />
     <orderEntry type="library" name="Gradle: ro.pippo:pippo-session-cookie:1.5.0" level="project" />

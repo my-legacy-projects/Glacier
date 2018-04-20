@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Glacier.iml" filepath="$PROJECT_DIR$/Glacier.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Glacier_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Glacier_main.iml" group="Glacier" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Glacier_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Glacier_test.iml" group="Glacier" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects-Glacier.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects-Glacier.iml" />
     </modules>
   </component>
 </project>
