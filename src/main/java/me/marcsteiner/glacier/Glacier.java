@@ -10,6 +10,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import me.marcsteiner.glacier.accounts.User;
 import me.marcsteiner.glacier.api.GlacierAPI;
+import me.marcsteiner.glacier.api.impl.SimpleAPI;
 import me.marcsteiner.glacier.bootstrap.BootstrapOptions;
 import me.marcsteiner.glacier.commands.CommandManager;
 import me.marcsteiner.glacier.database.Database;
@@ -55,8 +56,8 @@ public class Glacier {
     @Getter(lazy = true)
     private final Logger logger = LoggerFactory.getLogger(Glacier.class);
 
-    @Getter//(lazy=true)
-    private GlacierAPI api;
+    @Getter(lazy=true)
+    private final GlacierAPI api = new SimpleAPI();
 
     @Getter @Setter(onParam = @__(@NonNull))
     private CommandLine cmdArgs;
@@ -267,7 +268,7 @@ public class Glacier {
                 if (instruction.length >= 2) {
                     List<String> tempArgs = new ArrayList<>(Arrays.asList(instruction));
                     tempArgs.remove(0);
-                    cmdArgs = tempArgs.toArray(new String[tempArgs.size()]);
+                    cmdArgs = tempArgs.toArray(new String[0]);
                 }
 
                 getInstance().getCommandManager().execute(cmdLabel, cmdArgs);

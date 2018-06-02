@@ -73,6 +73,16 @@ public interface GlacierAPI {
 
     /**
      * Constructs a user object based
+     * on the provided username from values found in
+     * persistent database, if existent.
+     *
+     * @param username Username to be searched for in Database to construct user
+     * @return Constructed user
+     */
+    User getUser(String username);
+
+    /**
+     * Constructs a user object based
      * on provided UUID from values found in
      * persistent database, if existent.
      *
