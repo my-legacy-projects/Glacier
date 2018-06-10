@@ -66,8 +66,9 @@ public class MySQLDatabase implements Database {
     }
 
     @Override
-    public void setup() throws SQLException {
-        // Setup required tables etc.
+    public void setup() {
+        update("CREATE TABLE IF NOT EXISTS `users` (uuid VARCHAR(36), name VARCHAR(128), " +
+                "mail VARCHAR(128), salt VARCHAR(16), password VARCHAR(128));");
     }
 
     @Override
@@ -76,7 +77,7 @@ public class MySQLDatabase implements Database {
             @Cleanup Connection connection = getConnection();
             @Cleanup PreparedStatement statement = null;
 
-            statement = connection.prepareStatement(encode(query));
+            statement = connection.prepareStatement(query);
             statement.executeUpdate();
         } catch (SQLException ex) {
             Glacier.getInstance().getLogger().error("Error while executing SQL Update!", ex);
@@ -90,7 +91,7 @@ public class MySQLDatabase implements Database {
             @Cleanup PreparedStatement statement = null;
             @Cleanup ResultSet resultSet = null;
 
-            statement = connection.prepareStatement(encode(query));
+            statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
 
             return resultSet;
@@ -99,6 +100,25 @@ public class MySQLDatabase implements Database {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean tableExists(String table) {
+        try {
+            try (ResultSet rs = getConnection().getMetaData().getTables(null, null, table, null)) {
+                while (rs.next()) {
+                    String name = rs.getString("TABLE_NAME");
+
+                    if (name != null && name.equals(table)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Glacier.getInstance().getLogger().error("Unable to receive Meta Data for connection.", ex);
+        }
+
+        return false;
     }
 
     @Override
@@ -130,13 +150,11 @@ public class MySQLDatabase implements Database {
     @Override
     public int getAvailableConnections() {
         try {
-            MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-            ObjectName poolName;
-            poolName = new ObjectName("com.zaxxer.hikari:type=Pool (foo)");
+            MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+            ObjectName name = new ObjectName("com.zaxxer.hikari:type=Pool (foo)");
+            HikariPoolMXBean proxy = JMX.newMXBeanProxy(server, name, HikariPoolMXBean.class);
 
-            HikariPoolMXBean poolProxy = JMX.newMXBeanProxy(mBeanServer, poolName, HikariPoolMXBean.class);
-
-            return poolProxy.getIdleConnections();
+            return proxy.getIdleConnections();
         } catch (MalformedObjectNameException ex) {
             Glacier.getInstance().getLogger().error("Could not get amount of available connections.", ex);
             return -1;

@@ -211,7 +211,7 @@ public class Glacier {
             getInstance().setDatabase(new MySQLDatabase(dbAddress, dbPort, dbDatabase, dbUsername, dbPassword));
             getInstance().getDatabase().connect();
             getInstance().getDatabase().setup();
-        } catch (SQLException | HikariPool.PoolInitializationException ex) {
+        } catch (HikariPool.PoolInitializationException ex) {
             getInstance().getLogger().error("Could not connect to the MySQL database!", ex);
             System.exit(-1);
         }

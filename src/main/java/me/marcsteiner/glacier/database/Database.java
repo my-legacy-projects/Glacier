@@ -18,9 +18,10 @@ public interface Database {
     void disconnect();
     boolean isConnected();
 
-    void setup() throws SQLException;
+    void setup();
     void update(String query);
     ResultSet query(String query);
+    boolean tableExists(String table);
 
     Connection getConnection();
     HikariDataSource getConnectionPool();

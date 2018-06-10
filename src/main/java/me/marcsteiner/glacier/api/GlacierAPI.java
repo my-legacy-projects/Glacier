@@ -66,6 +66,16 @@ public interface GlacierAPI {
      * registered in Glaciers ecosystem and in the
      * persistent database.
      *
+     * @param username Username to be checked for
+     * @return <code>true</code> if registered, otherwise <code>false</code>
+     */
+    boolean isRegistered(String username);
+
+    /**
+     * Returns <code>true</code> if user has been
+     * registered in Glaciers ecosystem and in the
+     * persistent database.
+     *
      * @param uuid UUID to be checked for
      * @return <code>true</code> if registered, otherwise <code>false</code>
      */
