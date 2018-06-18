@@ -50,7 +50,7 @@ dependencies {
     // Web
     compile group: "ro.pippo", name: "pippo", version: "1.5.0"
     compile group: "ro.pippo", name: "pippo-freemarker", version: "1.5.0"
-    compile group: "ro.pippo", name: "pippo-gson", version: "1.5.0"
+    compile group: "ro.pippo", name: "pippo-gson", version: "1.9.0"
     compile group: "ro.pippo", name: "pippo-session-cookie", version: "1.5.0"
     compile group: "ro.pippo", name: "pippo-sasscompiler", version: "1.5.0"
 
