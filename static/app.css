@@ -116,7 +116,7 @@ main.container {
 }
 
 main.container div.blog-post {
-    width: 100%;
+    width: calc(100% - 32px);
     max-width: 650px;
     padding: 24px 16px;
     margin: auto;
