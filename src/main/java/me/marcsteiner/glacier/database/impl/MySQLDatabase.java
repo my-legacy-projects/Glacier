@@ -38,7 +38,7 @@ public class MySQLDatabase implements Database {
         if (!isConnected()) {
             HikariConfig config = new HikariConfig();
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mysql://" + address + ":" + port + "/" + database);
+            config.setJdbcUrl("jdbc:mysql://" + address + ":" + port + "/" + database + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
             config.setUsername(username);
             config.setPassword(password);
             config.setMinimumIdle(Glacier.getInstance().getConfig().getInt("database.pool.min"));

@@ -1,5 +1,6 @@
 package me.marcsteiner.glacier;
 
+import me.marcsteiner.glacier.routes.blog.BlogRouter;
 import org.kohsuke.MetaInfServices;
 import ro.pippo.core.Application;
 import ro.pippo.core.route.*;
@@ -17,12 +18,16 @@ public class GlacierWeb extends Application {
         // Add routes for static content
         addResourceRoute(new PublicResourceHandler());
         addResourceRoute(new WebjarsResourceHandler());
+        addFileResourceRoute("/static", "static");
 
         getRouter().ignorePaths("/favicon.ico");
 
         addBeforeFilters();
 
         // Groups
+        addRouteGroup(new BlogRouter());
+
+        GET("/", routeContext -> routeContext.redirect("/blog"));
 
         addAfterFilters();
     }

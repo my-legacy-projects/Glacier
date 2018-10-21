@@ -46,6 +46,12 @@ dependencies {
     compile group: "org.slf4j", name: "slf4j-simple", version: "1.7.25"
     compile group: "org.owasp.esapi", name: "esapi", version: "2.1.0.1"
     compile group: "org.mindrot", name: "jbcrypt", version: "0.4"
+    compile group: "org.freemarker", name: "freemarker", version: "2.3.28"
+    compile "com.atlassian.commonmark:commonmark:0.11.0"
+    compile "com.atlassian.commonmark:commonmark-ext-gfm-tables:0.11.0"
+    compile "com.atlassian.commonmark:commonmark-ext-autolink:0.11.0"
+    compile "com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.11.0"
+    compile "com.atlassian.commonmark:commonmark-ext-ins:0.11.0"
 
     // Web
     compile group: "ro.pippo", name: "pippo", version: "1.5.0"
@@ -55,10 +61,9 @@ dependencies {
     compile group: "ro.pippo", name: "pippo-sasscompiler", version: "1.5.0"
 
     // Webjars
-    compile group: "org.webjars", name: "bootstrap", version: "4.0.0-beta.2"
-    compile group: "org.webjars", name: "vue", version: "2.5.2"
-    compile group: "org.webjars", name: "jquery", version: "3.2.1"
     compile group: "org.webjars", name: "font-awesome", version: "4.7.0"
+    compile group: "org.webjars", name: "highlightjs", version: "9.8.0"
+    compile group: "org.webjars", name: "normalize.css", version: "5.0.0"
 
     // Dependencies
     testCompile group: "junit", name: "junit", version: "4.12"
