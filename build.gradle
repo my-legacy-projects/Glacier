@@ -35,7 +35,7 @@ dependencies {
 
     // Shaded using ShadowJar
     compile group: "com.virtlink.commons", name: "commons-configuration2-jackson", version: "0.6.1"
-    compile group: "org.apache.commons", name: "commons-configuration2", version: "2.1.1"
+    compile group: "org.apache.commons", name: "commons-configuration2", version: "2.2"
     compile group: "commons-cli", name: "commons-cli", version: "1.4"
     compile group: "commons-beanutils", name: "commons-beanutils", version: "1.9.3"
     compile group: "org.reflections", name: "reflections", version: "0.9.11"
