@@ -16,6 +16,12 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/static/app.css">
 
     <title>${title} - MarcSteiner.me</title>
+
+    <meta property="og:title" content="${title}">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="${image}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:site_name" content="MarcSteiner.me">
 </head>
 
 <body>

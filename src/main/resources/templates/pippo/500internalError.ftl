@@ -12,6 +12,11 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/static/app.css">
 
     <title>MarcSteiner.me</title>
+
+    <meta property="og:title" content="500 Internal Server Error - MarcSteiner.me">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="Be interested in things that interest you.">
+    <meta property="og:site_name" content="MarcSteiner.me">
 </head>
 
 <body>
