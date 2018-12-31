@@ -22,6 +22,7 @@
     <meta property="og:image" content="${image}">
     <meta property="og:description" content="${description}">
     <meta property="og:site_name" content="MarcSteiner.me">
+    <meta name="description" content="${description}">
 </head>
 
 <body>
@@ -31,14 +32,14 @@
                 <span class="brand">
                     <a href="/" class="link">marc steiner</a>
                 </span>
-            <span class="links">
+                <span class="links">
                     <a href="/blog" class="link">blog</a>
                     <a href="mailto:contact@marcsteiner.me" class="link">contact</a>
                 </span>
             <div class="post-info">
                 <h1>${title}</h1>
                 <h3>${description}</h3>
-                <h5>by ${author}</h5>
+                <h5>by <b><a href="${authorUrl}">${author}</a></b></h5>
             </div>
         </div>
     </nav>

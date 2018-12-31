@@ -21,6 +21,8 @@
     <meta property="og:type" content="website">
     <meta property="og:description" content="Be interested in things that interest you.">
     <meta property="og:site_name" content="MarcSteiner.me">
+
+    <meta name="description" content="A blog about things that I'm interested in, because they interest me.">
 </head>
 
 <body>
@@ -39,7 +41,7 @@
     <#list articleList as keyMap, valueMap>
         <div class="blog-post">
             <h1><a href="${valueMap["url"]}">${keyMap}</a></h1>
-            <h3>${valueMap["date"]} — by ${valueMap["author"]}</h3>
+            <h3>${valueMap["date"]} — by <b><a href="${valueMap["authorUrl"]}">${valueMap["author"]}</a></b></h3>
             <div class="preview markdown-body">
                 ${valueMap["preview"]}
                 <a class="read-more" href="${valueMap["url"]}">Read more...</a>
