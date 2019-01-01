@@ -30,7 +30,7 @@ repositories {
 dependencies {
     // Provided at runtime
     apt group: "org.projectlombok", name: "lombok", version: "1.16.18"
-    apt group: "org.kohsuke.metainf-services", name: "metainf-services", version: "1.1"
+    apt group: "org.kohsuke.metainf-services", name: "metainf-services", version: "1.7"
     compile group: "org.kohsuke.metainf-services", name: "metainf-services", version: "1.1"
 
     // Shaded using ShadowJar
