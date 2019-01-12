@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class OverallViewHandler implements RouteHandler {
 
@@ -20,7 +23,7 @@ public class OverallViewHandler implements RouteHandler {
         File file = new File("articles/");
         Collection<File> files = FileUtils.listFiles(file, new String[]{ "md" }, true);
 
-        Map<String, Map<String, String>> articleList = new LinkedHashMap<>();
+        Map<String, Map<String, String>> unsortedArticleList = new LinkedHashMap<>();
 
         for (File f : files) {
             String rawMarkdown;
@@ -67,10 +70,39 @@ public class OverallViewHandler implements RouteHandler {
 
             map.put("preview", html.substring(0, index));
 
-            articleList.put(map.get("title"), map);
+            if (map.getOrDefault("hidden", "false").equalsIgnoreCase("true")) {
+                continue;
+            }
+
+            unsortedArticleList.put(map.get("title"), map);
         }
 
-        routeContext.setLocal("articleList", articleList);
+        Comparator<Map.Entry<String, Map<String, String>>> comparator = (a, b) -> {
+            SimpleDateFormat format = new SimpleDateFormat("MMMM d, yyyy");
+
+            String strDateFirst = a.getValue().get("date");
+            String strDateSecond = b.getValue().get("date");
+
+            Date dateFirst;
+            Date dateSecond;
+
+            try {
+                dateFirst = format.parse(strDateFirst);
+                dateSecond = format.parse(strDateSecond);
+            } catch (ParseException ex) {
+                routeContext.render("pippo/500internalError");
+                return 0;
+            }
+
+            return dateFirst.compareTo(dateSecond);
+        };
+
+        Map<String, Map<String, String>> sortedArticleList =
+                unsortedArticleList.entrySet().stream().sorted(comparator).
+                        collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                (a, b) -> a, LinkedHashMap::new));
+
+        routeContext.setLocal("articleList", sortedArticleList);
         routeContext.render("articleList");
     }
 
