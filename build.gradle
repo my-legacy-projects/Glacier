@@ -58,7 +58,7 @@ dependencies {
     compile group: "ro.pippo", name: "pippo-freemarker", version: "1.5.0"
     compile group: "ro.pippo", name: "pippo-gson", version: "1.5.0"
     compile group: "ro.pippo", name: "pippo-session-cookie", version: "1.5.0"
-    compile group: "ro.pippo", name: "pippo-sasscompiler", version: "1.5.0"
+    compile group: "ro.pippo", name: "pippo-sasscompiler", version: "1.9.0"
 
     // Webjars
     compile group: "org.webjars", name: "font-awesome", version: "4.7.0"
